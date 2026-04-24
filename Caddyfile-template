@@ -1,0 +1,19 @@
+# rename this to "Caddyfile"
+opencode.yourdomain.com {
+    # 1. Ask Authelia if this person is logged in
+    forward_auth authelia:9091 {
+        uri /api/authz/forward-auth?rd=https://auth.yourdomain.com
+        copy_headers Remote-User Remote-Groups Remote-Name
+    }
+
+    # 2. If yes, go to OpenCode
+    reverse_proxy opencode:3001
+}
+
+auth.yourdomain.com {
+    reverse_proxy authelia:9091 {
+        # This ensures the original IP is passed correctly
+        header_up X-Forwarded-For {remote_host}
+        header_up X-Forwarded-Proto {scheme}
+    }
+}

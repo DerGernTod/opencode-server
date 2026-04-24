@@ -1,0 +1,41 @@
+services:
+  opencode:
+    build: .
+    container_name: opencode-web
+    volumes:
+      # Map your host projects folder to the container
+      # Adjust "C:/Users/YourName/Projects" to your actual path
+      - "C:/Users/gegen/workspaces/repos:/repos"
+      # Persist OpenCode config & auth so you don't log in every time
+      - ./opencode_config:/root/.config/opencode
+    networks:
+      - backend
+  authelia:
+    image: authelia/authelia:latest
+    container_name: authelia
+    volumes:
+      - ./authelia:/config
+    networks:
+      - backend
+
+  caddy:
+    image: caddy:latest
+    container_name: caddy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  caddy_data:
+  caddy_config:
+    

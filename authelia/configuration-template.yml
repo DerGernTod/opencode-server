@@ -1,0 +1,47 @@
+# rename this to "configuration.yml" and fill in the details
+# ... other standard Authelia configs (JWT, Storage, etc) ...
+webauthn:
+  display_name: "Your server name here"
+  selection_criteria:
+    user_verification: preferred
+
+session:
+  secret: "USE_A_LONG_RANDOM_STRING_HERE" # At least 64 chars
+  cookies:
+    - domain: "yourdomain.com"
+      authelia_url: "https://auth.yourdomain.com"
+
+storage:
+  encryption_key: "ANOTHER_LONG_RANDOM_STRING"
+  local:
+    path: /config/db.sqlite3
+
+identity_validation:
+  reset_password:
+    jwt_secret: "YET_ANOTHER_LONG_RANDOM_STRING"
+
+authentication_backend:
+  file:
+    path: /config/users_database.yml
+    password:
+      algorithm: argon2
+
+access_control:
+  default_policy: deny
+  rules:
+    - domain: "your.domain.here"
+      policy: two_factor # This triggers the Passkey prompt
+
+notifier:
+  filesystem:
+    filename: /config/notification.txt
+
+server:
+  endpoints:
+    authz:
+      forward_auth:
+        implementation: ForwardAuth
+  # This section helps Authelia know which headers to prioritize
+  buffers:
+    read: 4096
+    write: 4096
