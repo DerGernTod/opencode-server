@@ -1,8 +1,6 @@
-authelia/configuration.yml
-authelia/db.sqlite3
-authelia/notification.txt
-authelia/users_database.yml
-opencode_data/log
-opencode_data/opencode.db*
-opencode_data/auth.json
+authelia/*
+!authelia/*-template.yml
+opencode_data/*
+!opencode_data/.gitkeep
 Caddyfile
+.env
