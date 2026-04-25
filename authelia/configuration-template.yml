@@ -1,9 +1,12 @@
 # rename this to "configuration.yml" and fill in the details
 # ... other standard Authelia configs (JWT, Storage, etc) ...
 webauthn:
+  enable_passkey_login: true
+  experimental_enable_passkey_uv_two_factors: true
   display_name: "Your server name here"
   selection_criteria:
-    user_verification: preferred
+    discoverability: preferred
+    user_verification: required
 
 session:
   secret: "USE_A_LONG_RANDOM_STRING_HERE" # At least 64 chars
@@ -39,7 +42,7 @@ notifier:
 server:
   endpoints:
     authz:
-      forward_auth:
+      forward-auth:
         implementation: ForwardAuth
   # This section helps Authelia know which headers to prioritize
   buffers:

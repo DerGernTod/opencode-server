@@ -2,12 +2,21 @@ services:
   opencode:
     build: .
     container_name: opencode-web
+    environment:
+      - GIT_CONFIG_COUNT=1
+      - GIT_CONFIG_KEY_0=credential.helper
+      - GIT_CONFIG_VALUE_0=!gh auth git-credential
+    working_dir: /projects
+    command: sh -c "cd /projects && opencode serve --hostname 0.0.0.0 --port 3001"
     volumes:
       # Map your host projects folder to the container
       # Adjust "C:/Users/YourName/Projects" to your actual path
-      - "C:/Users/gegen/workspaces/repos:/repos"
+      - "C:/Users/gegen/workspaces/repos:/projects"
       # Persist OpenCode config & auth so you don't log in every time
       - ./opencode_config:/root/.config/opencode
+      - ./opencode_data:/root/.local/share/opencode
+      - "C:/Users/gegen/.gitconfig:/root/.gitconfig:ro"
+      - "C:/Users/gegen/AppData/Roaming/GitHub CLI:/root/.config/gh"
     networks:
       - backend
   authelia:

@@ -31,10 +31,5 @@ RUN mkdir -p -m 755 /etc/apt/keyrings \
 # Install OpenCode Web
 RUN npm install -g opencode-ai
 
-# Set the working directory for your projects
-WORKDIR /projects
-
 # Expose the port (default OpenCode port is 3000, adjust if needed)
 EXPOSE 3001
-
-CMD ["opencode", "serve", "--hostname", "0.0.0.0", "--port", "3001"]
