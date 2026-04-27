@@ -37,3 +37,21 @@ auth.yourdomain.com {
         copy_headers Remote-User Remote-Groups Remote-Name
     }
 }
+*.projects.your-domain.com {
+    tls {
+        dns hetzner {$HETZNER_API_KEY}
+        propagation_delay 60s
+        propagation_timeout -1
+    }
+    @get_parts header_regexp project Host ^([^.]+)\.projects
+
+    handle @get_parts {
+        # This matches the --name we gave the container in the Action
+        reverse_proxy project-{re.project.1}:3000
+    }
+
+    forward_auth authelia:9091 {
+        uri /api/authz/forward-auth?rd=https://auth.your-domain.com
+        copy_headers Remote-User Remote-Groups Remote-Name Remote-Email
+    }
+}
