@@ -20,6 +20,10 @@ auth.yourdomain.com {
 
 # pr12-project.prs.yourdomain.com
 *.prs.yourdomain.com {
+    tls {
+        dns hetzner {$HETZNER_API_KEY}
+        propagation_delay 30s
+    }
     @get_parts header_regexp pr_host Host ^pr([0-9]+)-([a-z0-9-]+)\.prs
     
     handle @get_parts {
@@ -29,6 +33,7 @@ auth.yourdomain.com {
     
     # Optional: Keep it private
     forward_auth authelia:9091 {
-        uri /api/verify?rd=https://auth.yourdomain.com
+        uri /api/authz/forward-auth?rd=https://auth.yourdomain.com
+        copy_headers Remote-User Remote-Groups Remote-Name
     }
 }

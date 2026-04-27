@@ -3,9 +3,11 @@ services:
     build: .
     container_name: opencode-web
     environment:
-      - GIT_CONFIG_COUNT=1
-      - GIT_CONFIG_KEY_0=credential.helper
-      - GIT_CONFIG_VALUE_0=!gh auth git-credential
+      - GIT_AUTHOR_NAME=${MY_GITHUB_AUTHOR}
+      - GIT_AUTHOR_EMAIL=${MY_GITHUB_EMAIL}
+      - GIT_COMMITTER_NAME=${MY_GITHUB_AUTHOR}
+      - GIT_COMMITTER_EMAIL=${MY_GITHUB_EMAIL}
+      - GH_TOKEN=${MY_GITHUB_PAT}
     working_dir: /projects
     command: sh -c "cd /projects && opencode serve --hostname 0.0.0.0 --port 3001"
     volumes:
@@ -15,8 +17,6 @@ services:
       # Persist OpenCode config & auth so you don't log in every time
       - ./opencode_config:/root/.config/opencode
       - ./opencode_data:/root/.local/share/opencode
-      - "C:/Users/gegen/.gitconfig:/root/.gitconfig:ro"
-      - "C:/Users/gegen/AppData/Roaming/GitHub CLI:/root/.config/gh"
     networks:
       - backend
   authelia:
@@ -29,10 +29,16 @@ services:
 
   caddy:
     image: caddy:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.caddy
     container_name: caddy
     ports:
       - "80:80"
       - "443:443"
+    environment:
+      - HETZNER_API_KEY=${HETZNER_API_KEY}
+      - DOMAIN=${DOMAIN}
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - caddy_data:/data
@@ -42,7 +48,9 @@ services:
 
 networks:
   backend:
+    name: opencode-server_backend
     driver: bridge
+    attachable: true
 
 volumes:
   caddy_data:
