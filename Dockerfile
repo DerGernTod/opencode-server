@@ -31,5 +31,7 @@ RUN mkdir -p -m 755 /etc/apt/keyrings \
 # Install OpenCode Web
 RUN npm install -g opencode-ai
 
+RUN mkdir -p -m 0700 /root/.ssh && ssh-keyscan github.com >> /root/.ssh/known_hosts
+
 # Expose the port (default OpenCode port is 3000, adjust if needed)
 EXPOSE 3001

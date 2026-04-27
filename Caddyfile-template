@@ -17,3 +17,18 @@ auth.yourdomain.com {
         header_up X-Forwarded-Proto {scheme}
     }
 }
+
+# pr12-project.prs.yourdomain.com
+*.prs.yourdomain.com {
+    @get_parts header_regexp pr_host Host ^pr([0-9]+)-([a-z0-9-]+)\.prs
+    
+    handle @get_parts {
+        # This matches the --name we gave the container in the Action
+        reverse_proxy pr-{re.pr_host.1}-{re.pr_host.2}:3000
+    }
+    
+    # Optional: Keep it private
+    forward_auth authelia:9091 {
+        uri /api/verify?rd=https://auth.yourdomain.com
+    }
+}
