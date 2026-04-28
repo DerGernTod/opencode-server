@@ -1,4 +1,15 @@
 # rename this to "Caddyfile"
+{
+    dynamic_dns {
+        provider hetzner {$HETZNER_API_KEY}
+        domains {
+            yourdomain.com subdomain
+        }
+        versions ipv4
+        check_interval 30m
+    }
+}
+
 opencode.yourdomain.com {
     # 1. Ask Authelia if this person is logged in
     forward_auth authelia:9091 {
