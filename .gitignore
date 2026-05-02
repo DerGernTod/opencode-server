@@ -2,5 +2,7 @@ authelia/*
 !authelia/*-template.yml
 opencode_data/*
 !opencode_data/.gitkeep
+ssh/*
+!ssh/.gitkeep
 Caddyfile
 .env
