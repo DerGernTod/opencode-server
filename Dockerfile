@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y \
     unzip \
     ca-certificates \
     gnupg \
+    openssh-client \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Node.js (LTS)
@@ -34,7 +35,11 @@ RUN bunx playwright install
 # Install OpenCode Web
 RUN npm install -g opencode-ai
 
+# Prepare SSH directory and trust GitHub's host key
 RUN mkdir -p -m 0700 /root/.ssh && ssh-keyscan github.com >> /root/.ssh/known_hosts
+
+# Persist SSH config/keys via a mounted volume at runtime
+VOLUME ["/root/.ssh"]
 
 # Expose the port (default OpenCode port is 3000, adjust if needed)
 EXPOSE 3001
