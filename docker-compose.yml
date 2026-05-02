@@ -17,6 +17,8 @@ services:
       # Persist OpenCode config & auth so you don't log in every time
       - ./opencode_config:/root/.config/opencode
       - ./opencode_data:/root/.local/share/opencode
+      # Persist SSH keys/config for GitHub access
+      - ./ssh:/root/.ssh
     networks:
       - backend
   authelia:
@@ -55,4 +57,3 @@ networks:
 volumes:
   caddy_data:
   caddy_config:
-    
