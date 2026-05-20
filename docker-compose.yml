@@ -21,6 +21,7 @@ services:
       - ./ssh:/root/.ssh
     networks:
       - backend
+    restart: unless-stopped
   authelia:
     image: authelia/authelia:latest
     container_name: authelia
@@ -28,6 +29,7 @@ services:
       - ./authelia:/config
     networks:
       - backend
+    restart: unless-stopped
 
   caddy:
     image: caddy:latest
@@ -47,6 +49,7 @@ services:
       - caddy_config:/config
     networks:
       - backend
+    restart: unless-stopped
 
 networks:
   backend:
